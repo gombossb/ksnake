@@ -1,2 +1,2 @@
-# kchess
-Kotlin chess
+# KSnake
+Kotlin Snake
