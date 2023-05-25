@@ -1,8 +1,20 @@
 package org.ksnake
 
-class Map (val size: Vec2) {
+class SnakeMap (val size: Vec2) {
     val snake: Snake = Snake(4)
     val pickups = mutableSetOf<Pickup>()
+
+    companion object {
+        fun calcGameCanvasSize(mapSize: Vec2): Vec2 {
+            return Vec2((mapSize.x * App.BLOCK_SIZE).toByte(), (mapSize.x * App.BLOCK_SIZE).toByte())
+        }
+        val levelSizes = linkedMapOf<String, Vec2>(
+            "Small" to Vec2(10, 10),
+            "Medium" to Vec2(15, 15),
+            "Large" to Vec2(20, 20),
+            "Very Big" to Vec2(42, 42),
+        )
+    }
 
     // add initial snake segments positioned at the center of the map
     init {
