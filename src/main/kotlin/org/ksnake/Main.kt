@@ -1,7 +1,7 @@
-package com.example
+package org.ksnake
 
 import javafx.application.Application
 
 fun main(args: Array<String>) {
-    Application.launch(Game::class.java, *args)
+    Application.launch(App::class.java, *args)
 }

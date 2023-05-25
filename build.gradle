@@ -23,4 +23,4 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
-mainClassName = 'com.example.MainKt'
+mainClassName = 'org.ksnake.MainKt'
