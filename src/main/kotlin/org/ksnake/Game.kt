@@ -4,7 +4,34 @@ class Game(mapSize: Vec2, val playerLives: Int) {
     val map = SnakeMap(mapSize)
     var currentLives = playerLives
     var paused = false
-    var finished = false
     var score = 0
     var playerName = ""
+
+    // return whether a rerender is required
+    fun logicLoop(app: App, deltaTime: Long): Boolean {
+        if (paused || currentLives == 0)
+            return false
+
+        app.checkMovementKeys()
+
+        if (app.sumDtSinceLastTick >= App.NS_PER_TICK){
+            app.sumDtSinceLastTick %= App.NS_PER_TICK
+
+            map.stepSnake()
+            if (map.pickups.contains(map.snake.segments[0])){
+                map.pickups.remove(map.snake.segments[0])
+                score++
+            }
+
+            if (map.snake.snakeHitItself())
+                currentLives--
+
+            if ((0..15).random() == 15)
+                map.spawnPickup()
+
+            return true
+        } else {
+            return false
+        }
+    }
 }

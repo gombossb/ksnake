@@ -1,14 +1,14 @@
 package org.ksnake
 
 class SnakeMap (val mapSize: Vec2) {
-    val snake: Snake = Snake(4)
-    val pickups = mutableSetOf<Pickup>()
+    val snake: Snake = Snake()
+    val pickups = mutableSetOf<Vec2>()
 
     companion object {
-        val levelSizes = linkedMapOf<String, Vec2>(
-            "Small" to Vec2(10, 10),
-            "Medium" to Vec2(15, 15),
-            "Large" to Vec2(20, 20),
+        val levelSizes = linkedMapOf(
+            "Small" to Vec2(15, 15),
+            "Medium" to Vec2(20, 20),
+            "Large" to Vec2(30, 30),
             "Very Big" to Vec2(42, 42),
         )
         fun calcGameCanvasSize(mapSize: Vec2): Vec2 {
@@ -34,20 +34,36 @@ class SnakeMap (val mapSize: Vec2) {
             return false
 
         for (p in pickups)
-            if (p.position == loc)
+            if (p == loc)
                 return false
 
         return true
     }
 
+    fun spawnPickup(){
+        val randomLoc = Vec2((0 until mapSize.x).random().toShort(), (0 until mapSize.y).random().toShort())
+        if (!locationFree(randomLoc) || pickups.size > 0)
+            return
+
+        pickups.add(randomLoc)
+    }
+
     fun stepSnake(){
         var prev = snake.segments[0]
         stepSnakeHead()
+
+        var lastSegment: Vec2? = null
+        if (pickups.contains(snake.segments[0])) {
+            lastSegment = snake.segments.last()
+        }
+
         for (i in 1 until snake.segments.size){
             val curr = snake.segments[i]
             snake.segments[i] = prev
             prev = curr
         }
+        if (lastSegment != null)
+            snake.segments.add(lastSegment)
     }
 
     private fun stepSnakeHead(){
