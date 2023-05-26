@@ -81,9 +81,9 @@ class GameGUI(val app: App) {
             }
 
             app.mainStage.scene = gameScene
+            app.mainStage.sizeToScene()
             app.mainStage.hide()
             app.mainStage.show()
-            app.mainStage.sizeToScene()
 
         } else {
             app.mainStage.scene = gameScene
@@ -119,7 +119,7 @@ class GameGUI(val app: App) {
             if (i == 0)
                 gc.fill = Color.WHITE
             else
-                gc.fill = if (app.game.currentLives != 0) Color.YELLOW else Color.RED
+                gc.fill = if (app.game.currentLives == 0) Color.RED else Color.YELLOW
 
             gc.fillRect(
                 (segment.x * App.BLOCK_SIZE + segment.x * App.BLOCK_GAP_SIZE).toDouble(),

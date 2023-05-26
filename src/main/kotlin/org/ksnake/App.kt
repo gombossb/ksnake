@@ -1,24 +1,10 @@
 package org.ksnake
 
-import javafx.animation.AnimationTimer
 import javafx.application.Application
-import javafx.event.EventHandler
-import javafx.geometry.Insets
-import javafx.scene.Scene
-import javafx.scene.canvas.Canvas
 import javafx.scene.canvas.GraphicsContext
-import javafx.scene.control.Button
-import javafx.scene.control.ChoiceBox
-import javafx.scene.control.Label
 import javafx.scene.input.KeyCode
-import javafx.scene.layout.GridPane
-import javafx.scene.layout.HBox
-import javafx.scene.layout.Pane
-import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import javafx.stage.Stage
-import kotlin.system.exitProcess
-
 
 class App : Application() {
     companion object {
@@ -27,23 +13,24 @@ class App : Application() {
         const val BLOCK_SIZE = 20
         const val BLOCK_GAP_SIZE = 3
         const val NS_PER_TICK: Long = 500_000_000 // 500ms
+        const val COOLDOWN_AMOUNT: Long = 1_000_000_000
     }
 
     lateinit var mainStage: Stage
 
     val mainMenu = MainMenu(this)
     val gameGUI = GameGUI(this)
-
-    private var saveScoreScene: Scene? = null
-    private var toplistScene: Scene? = null
+    val saveScore = SaveScore(this)
+    val toplist = Toplist(this)
 
     val currentlyActiveKeys = mutableSetOf<KeyCode>()
     var lastFrameTime: Long = System.nanoTime()
     var sumDtSinceLastTick: Long = 0
-    private var ticks: Long = 0
+
+    var cooldown: Long = 0
+    fun resetCooldown(){ cooldown = COOLDOWN_AMOUNT }
 
     lateinit var game: Game
-
 
     override fun start(mainStage: Stage) {
         this.mainStage = mainStage
@@ -74,7 +61,15 @@ class App : Application() {
         lastFrameTime = currentNanoTime
         sumDtSinceLastTick += dt
 
-        val rerender = game.logicLoop(this, dt)
+        var rerender = false
+
+        if (cooldown > 0){
+            cooldown -= dt
+            rerender = true
+        } else {
+            rerender = game.logicLoop(this, dt)
+        }
+
         if (rerender){
             gameGUI.renderGameCanvas()
             fpsCounter(gameGUI.canvas!!.graphicsContext2D, dt)

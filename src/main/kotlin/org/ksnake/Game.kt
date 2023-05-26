@@ -1,11 +1,10 @@
 package org.ksnake
 
-class Game(mapSize: Vec2, val playerLives: Int) {
-    val map = SnakeMap(mapSize)
+class Game(val mapSize: Vec2, val playerLives: Int) {
+    var map = SnakeMap(mapSize)
     var currentLives = playerLives
     var paused = false
     var score = 0
-    var playerName = ""
 
     // return whether a rerender is required
     fun logicLoop(app: App, deltaTime: Long): Boolean {
@@ -23,8 +22,15 @@ class Game(mapSize: Vec2, val playerLives: Int) {
                 score++
             }
 
-            if (map.snake.snakeHitItself())
+            if (map.snake.snakeHitItself()){
                 currentLives--
+                if (currentLives > 0){
+                    map = SnakeMap(mapSize)
+                    app.resetCooldown()
+                } else {
+                    app.saveScore.saveScoreScene()
+                }
+            }
 
             if ((0..15).random() == 15)
                 map.spawnPickup()

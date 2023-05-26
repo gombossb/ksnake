@@ -64,5 +64,8 @@ class MainMenu(val app: App) {
             mainMenuLayout.children.add(hb)
         }
         app.mainStage.scene = mainMenuScene
+        app.mainStage.sizeToScene()
+        app.mainStage.hide()
+        app.mainStage.show()
     }
 }
