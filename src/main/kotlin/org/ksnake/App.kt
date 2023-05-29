@@ -16,8 +16,9 @@ class App : Application() {
         const val COOLDOWN_AMOUNT: Long = 1_000_000_000
     }
 
-    lateinit var mainStage: Stage
+    var game: Game? = null
 
+    lateinit var mainStage: Stage
     val mainMenu = MainMenu(this)
     val gameGUI = GameGUI(this)
     val saveScore = SaveScore(this)
@@ -30,7 +31,6 @@ class App : Application() {
     var cooldown: Long = 0
     fun resetCooldown(){ cooldown = COOLDOWN_AMOUNT }
 
-    lateinit var game: Game
 
     override fun start(mainStage: Stage) {
         this.mainStage = mainStage
@@ -48,15 +48,10 @@ class App : Application() {
         println("new game: $lives $levelSize")
     }
 
-    fun toplist(){
-        // TODO
-    }
-
-    private fun saveGame(){
-        // TODO
-    }
-
     fun gameLoop(currentNanoTime: Long) {
+        if (game == null)
+            return
+
         val dt = currentNanoTime - lastFrameTime
         lastFrameTime = currentNanoTime
         sumDtSinceLastTick += dt
@@ -67,7 +62,7 @@ class App : Application() {
             cooldown -= dt
             rerender = true
         } else {
-            rerender = game.logicLoop(this, dt)
+            rerender = game!!.logicLoop(this, dt)
         }
 
         if (rerender){
@@ -96,8 +91,8 @@ class App : Application() {
             preferredDir = Direction.LEFT
         }
 
-        if (preferredDir != null && !Direction.oppositeDirection(preferredDir, game.map.snake.headDir)){
-            game.map.snake.headDir = preferredDir
+        if (preferredDir != null && !Direction.oppositeDirection(preferredDir, game!!.map.snake.headDir)){
+            game!!.map.snake.headDir = preferredDir
         }
     }
 }

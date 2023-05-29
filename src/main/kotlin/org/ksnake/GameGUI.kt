@@ -26,17 +26,24 @@ class GameGUI(val app: App) {
     var timer: AnimationTimer? = null
 
     init {
-        mainMenuButton.setOnAction { app.mainMenu.mainMenuScene() }
+        mainMenuButton.setOnAction {
+            app.game = null
+            app.mainMenu.mainMenuScene()
+        }
         restartButton.setOnAction {
             timer?.stop()
-            app.newGame(app.game.playerLives, app.game.map.mapSize)
+            app.newGame(app.game!!.playerLives, app.game!!.map.mapSize)
             gameScene()
         }
         pauseButton.setOnAction {
-            app.game.paused = !app.game.paused
-            pauseButton.text = if (app.game.paused) "Resume" else "Pause"
+            app.game!!.paused = !app.game!!.paused
+            pauseButton.text = if (app.game!!.paused) "Resume" else "Pause"
         }
-        toplistButton.setOnAction { app.toplist() } // todo
+        toplistButton.setOnAction {
+            timer?.stop()
+            app.game!!.paused = !app.game!!.paused
+            app.toplist.toplistScene()
+        }
     }
 
     fun reset(){
@@ -44,6 +51,7 @@ class GameGUI(val app: App) {
         rootPane = null
         canvas = null
         canvasSize = null
+        timer?.stop()
         timer = null
     }
 
@@ -54,7 +62,7 @@ class GameGUI(val app: App) {
 
     fun gameScene(){
         if (gameScene == null){
-            canvasSize = SnakeMap.calcGameCanvasSize(app.game.map.mapSize)
+            canvasSize = SnakeMap.calcGameCanvasSize(app.game!!.map.mapSize)
 
             val vb = VBox()
             val hb = HBox()
@@ -98,13 +106,13 @@ class GameGUI(val app: App) {
     }
 
     fun renderGameCanvas(){
-        updateLabels(app.game.currentLives, app.game.score)
+        updateLabels(app.game!!.currentLives, app.game!!.score)
 
         val gc = canvas!!.graphicsContext2D
         gc.fill = Color.BLACK
         gc!!.fillRect(0.0, 0.0, canvasSize!!.x.toDouble(), canvasSize!!.y.toDouble())
 
-        for (p in app.game.map.pickups){
+        for (p in app.game!!.map.pickups){
             gc.fill = Color.PURPLE
             gc.fillRect(
                 (p.x * App.BLOCK_SIZE + p.x * App.BLOCK_GAP_SIZE).toDouble(),
@@ -113,13 +121,13 @@ class GameGUI(val app: App) {
             )
         }
 
-        for (i in app.game.map.snake.segments.indices){
-            val segment = app.game.map.snake.segments[i]
+        for (i in app.game!!.map.snake.segments.size-1 downTo 0){
+            val segment = app.game!!.map.snake.segments[i]
 
             if (i == 0)
                 gc.fill = Color.WHITE
             else
-                gc.fill = if (app.game.currentLives == 0) Color.RED else Color.YELLOW
+                gc.fill = if (app.game!!.currentLives == 0) Color.RED else Color.YELLOW
 
             gc.fillRect(
                 (segment.x * App.BLOCK_SIZE + segment.x * App.BLOCK_GAP_SIZE).toDouble(),

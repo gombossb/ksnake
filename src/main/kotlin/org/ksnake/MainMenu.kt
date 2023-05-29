@@ -54,7 +54,7 @@ class MainMenu(val app: App) {
             hb.children.add(startButton)
 
             val toplistButton = Button("Toplist")
-            toplistButton.setOnAction{ app.toplist() }
+            toplistButton.setOnAction{ app.toplist.toplistScene() }
             hb.children.add(toplistButton)
 
             val quitButton = Button("Quit")

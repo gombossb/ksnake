@@ -32,7 +32,11 @@ class Game(val mapSize: Vec2, val playerLives: Int) {
                 }
             }
 
-            if ((0..15).random() == 15)
+            // no more free space
+            if (map.snake.segments.size == map.mapSize.x * map.mapSize.y)
+                app.saveScore.saveScoreScene()
+
+            if ((0..10).random() == 0)
                 map.spawnPickup()
 
             return true

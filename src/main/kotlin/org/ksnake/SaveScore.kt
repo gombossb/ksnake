@@ -5,6 +5,7 @@ import javafx.scene.control.Button
 import javafx.scene.control.Label
 import javafx.scene.control.TextField
 import javafx.scene.layout.VBox
+import java.io.File
 
 class SaveScore(val app: App) {
     fun saveScoreScene(){
@@ -17,7 +18,7 @@ class SaveScore(val app: App) {
         layout.children.add(tf)
 
         val saveButton = Button("Save Score")
-        saveButton.setOnAction { saveScore(tf.text, app.game.score) }
+        saveButton.setOnAction { saveScore(tf.text, app.game!!.score); app.game = null }
         layout.children.add(saveButton)
 
         val mainMenuButton = Button("Main Menu")
@@ -31,7 +32,7 @@ class SaveScore(val app: App) {
     }
     private fun saveScore(name: String, score: Int){
         println("$name $score")
-        // todo
+        File("scores.txt").appendText("$name\t$score\n")
         app.toplist.toplistScene()
     }
 }
