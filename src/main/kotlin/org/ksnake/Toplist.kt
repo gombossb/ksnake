@@ -58,13 +58,16 @@ class Toplist(val app: App) {
         vb.children.add(paneBox)
         vb.children.add(hb)
 
-        app.mainStage.scene = Scene(vb, 400.0, 300.0)
+        app.mainStage.scene = Scene(vb, App.TOPLIST_WIDTH, App.TOPLIST_HEIGHT)
         app.mainStage.sizeToScene()
         app.mainStage.hide()
         app.mainStage.show()
 
     }
     private fun loadScores(): MutableList<Score> {
+        if (!File("scores.txt").exists())
+            return mutableListOf()
+
         val scores = mutableMapOf<String, Int>()
         File("scores.txt").forEachLine {
             if (it.isNotEmpty()) {

@@ -18,21 +18,21 @@ class SaveScore(val app: App) {
         layout.children.add(tf)
 
         val saveButton = Button("Save Score")
-        saveButton.setOnAction { saveScore(tf.text, app.game!!.score); app.game = null }
+        saveButton.setOnAction { saveScore(tf.text, app.game!!.score) }
         layout.children.add(saveButton)
 
         val mainMenuButton = Button("Main Menu")
         mainMenuButton.setOnAction { app.mainMenu.mainMenuScene() }
         layout.children.add(mainMenuButton)
 
-        app.mainStage.scene = Scene(layout)
-        app.mainStage.sizeToScene()
+        app.mainStage.scene = Scene(layout, App.SAVESCORE_WIDTH, App.SAVESCORE_HEIGHT)
         app.mainStage.hide()
         app.mainStage.show()
     }
     private fun saveScore(name: String, score: Int){
-        println("$name $score")
+//        println("$name $score")
         File("scores.txt").appendText("$name\t$score\n")
+        app.game = null
         app.toplist.toplistScene()
     }
 }

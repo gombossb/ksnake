@@ -95,6 +95,7 @@ class GameGUI(val app: App) {
 
         } else {
             app.mainStage.scene = gameScene
+            app.mainStage.sizeToScene()
         }
 
         timer = object : AnimationTimer() {

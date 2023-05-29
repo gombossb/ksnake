@@ -6,6 +6,7 @@ import javafx.scene.input.KeyCode
 import javafx.scene.paint.Color
 import javafx.stage.Stage
 
+// application window class
 class App : Application() {
     companion object {
         const val MAIN_MENU_WIDTH = 300.0
@@ -14,6 +15,10 @@ class App : Application() {
         const val BLOCK_GAP_SIZE = 3
         const val NS_PER_TICK: Long = 500_000_000 // 500ms
         const val COOLDOWN_AMOUNT: Long = 1_000_000_000
+        const val SAVESCORE_WIDTH = 400.0
+        const val SAVESCORE_HEIGHT = 300.0
+        const val TOPLIST_WIDTH = 400.0
+        const val TOPLIST_HEIGHT = 300.0
     }
 
     var game: Game? = null
@@ -31,7 +36,6 @@ class App : Application() {
     var cooldown: Long = 0
     fun resetCooldown(){ cooldown = COOLDOWN_AMOUNT }
 
-
     override fun start(mainStage: Stage) {
         this.mainStage = mainStage
         mainStage.title = "Kotlin Snake"
@@ -45,7 +49,7 @@ class App : Application() {
     fun newGame(lives: Int, levelSize: Vec2){
         game = Game(levelSize, lives)
         gameGUI.reset()
-        println("new game: $lives $levelSize")
+//        println("new game: $lives $levelSize")
     }
 
     fun gameLoop(currentNanoTime: Long) {
@@ -67,7 +71,7 @@ class App : Application() {
 
         if (rerender){
             gameGUI.renderGameCanvas()
-            fpsCounter(gameGUI.canvas!!.graphicsContext2D, dt)
+//            fpsCounter(gameGUI.canvas!!.graphicsContext2D, dt)
         }
     }
 
